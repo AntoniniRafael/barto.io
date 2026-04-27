@@ -2,20 +2,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include "game.h"
+#include "input.h"
 
 void display();
-void keyDown(unsigned char,int,int);
-void keyUp(unsigned char,int,int);
-void mouse(int,int,int,int);
 
 void timer(int v){
+    int delay = 0;
     updateGame();
     glutPostRedisplay();
-
-    int speed = 200 - (timeSurvived / 10);
-    if(speed < 90) speed = 90;
-
-    glutTimerFunc(speed, timer, 0);
+    
+    glutTimerFunc(delay, timer, 0);
 }
 
 void init(){
@@ -31,7 +27,17 @@ int main(int argc,char** argv){
 
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
-    glutInitWindowSize(500,800);
+    
+    int width = 500;
+    int height = 700;
+    int screenW = glutGet(GLUT_SCREEN_WIDTH);
+    int screenH = glutGet(GLUT_SCREEN_HEIGHT);
+    int posX = (screenW - width) / 2;
+    int posY = (screenH - height) / 2;
+
+    glutInitWindowSize(width, height);
+    glutInitWindowPosition(posX, posY);
+    
     glutCreateWindow("Dog Dodge Deluxe");
 
     init();

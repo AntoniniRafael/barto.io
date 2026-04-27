@@ -2,6 +2,7 @@
 #include "game.h"
 #include <stdio.h>
 #include <math.h>
+#include "cachorro.h"
 
 void drawText(float x, float y, char *text) {
     glRasterPos2f(x,y);
@@ -99,22 +100,25 @@ void drawHUD() {
     sprintf(txt,"Score: %d",score);
     drawText(0,9.5,txt);
 
-    sprintf(txt,"Tempo: %d",timeSurvived);
+    sprintf(txt,"Tempo: %.1fs",timeSurvived);
     drawText(3,9.5,txt);
 }
 
 void drawRanking(){
     FILE *f = fopen("score.txt","r");
-    char txt[50];
-    int s, y = 3;
+    char txt[32];
+    int score = 0;
+    float y = 3;
+    int rank = 1;
 
     drawText(1,4,"TOP 5:");
 
     if(f){
-        while(fscanf(f,"%d",&s)!=EOF){
-            sprintf(txt,"%d",s);
+        while(fscanf(f,"%d",&score)!=EOF){
+            sprintf(txt,"%do -> %4d",rank,score);
             drawText(1,y,txt);
-            y--;
+            y -= 0.5f;
+            rank++;
         }
         fclose(f);
     }
@@ -134,7 +138,8 @@ void display() {
         drawText(1.3,2,"S para screenshot");
     }
     else if(screen == 1) {
-        drawDog();
+        //drawDog();
+        desenhaCachorro(dogPos+0.5, 0.5f, 2.0f);
         drawObs();
         drawParticles();
         drawHUD();
