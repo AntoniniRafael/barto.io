@@ -1,14 +1,20 @@
 #include <GL/glut.h>
 #include "game.h"
 #include "input.h"
-
+#include "utils.h"
 void saveScreenshot();
 
 void keyDown(unsigned char key,int x,int y){
     if(screen != 1) return;
 
-    if(key=='a') moveLeft = KEY_PRESSED;
-    if(key=='d') moveRight = KEY_PRESSED;
+    if(key=='a'){
+        moveLeft = KEY_PRESSED;
+        tocarSom("moveA.wav");
+    }
+    if(key=='d'){
+        moveRight = KEY_PRESSED;
+        tocarSom("moveD.wav");
+    }
     if(key=='p') paused = !paused;
     if(key=='s') saveScreenshot();
 }

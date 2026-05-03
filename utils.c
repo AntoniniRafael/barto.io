@@ -1,5 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+#include <mmsystem.h>
 #include <GL/glut.h>
+
+void tocarSom(const char *filename) {
+    PlaySoundA(filename, NULL, SND_FILENAME | SND_ASYNC);
+}
 
 void saveScreenshot() {
     const char filename[] = "screenshot.bmp";

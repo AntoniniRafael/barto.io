@@ -1,5 +1,6 @@
 #include "game.h"
 #include "input.h"
+#include "utils.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <windows.h>
@@ -129,7 +130,6 @@ void updateGame() {
         nextInputTime = 0;
     }
 
-    // obstáculos
     for(int i=0;i<MAX_OBS;i++) {
         if(obs[i].active) {
             obs[i].y -= obstacleSpeed * delta;
@@ -139,6 +139,7 @@ void updateGame() {
 
             if(obs[i].y < 1.0f && fabs(dogCenter - obsCenter) < 0.5) {
                 createExplosion((int)dogPos, 0);
+                tocarSom("game_over.wav");
                 gameOver = 1;
                 gameOverUntil = now + GAME_OVER_DURATION;
             }
