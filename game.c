@@ -119,10 +119,10 @@ void updateGame() {
         }
     }
 
-    // Se o tempo de espera passou, libera o movimento novamente
+    /* // Se o tempo de espera passou, libera o movimento novamente
     if (now > nextInputTime) {
         canMove = 1;
-    }
+    } */
 
     // Se o jogador soltou as teclas, reseta o timer para ele poder clicar rápido de novo
     if (moveLeft == KEY_RELEASED && moveRight == KEY_RELEASED) {
@@ -147,12 +147,13 @@ void updateGame() {
             if(obs[i].y < 0) {
                 obs[i].active = 0;
                 score++;
-                if (obstacleSpawnInterval > 333) {
+                if (obstacleSpawnInterval > 0) {
                     obstacleSpawnInterval *= 0.99; // diminui 1% o intervalo entre cada spawn
                 }
-                if (obstacleSpeed <= 0.01f) {
+                
+                //if (obstacleSpeed <= 0.01f) {
                     obstacleSpeed *= 1.01f; // aumenta 1% a velocidade a cada score
-                }
+                //}
                 printf("obstacleSpeed: %f\nobstacleSpawnInterval: %d\n", obstacleSpeed, obstacleSpawnInterval);
             }
         }

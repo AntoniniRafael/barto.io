@@ -7,7 +7,7 @@
 void display();
 
 void timer(int v){
-    int delay = 0;
+    int delay = 1;
     updateGame();
     glutPostRedisplay();
     
