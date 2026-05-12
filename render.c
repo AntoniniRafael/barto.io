@@ -2,7 +2,50 @@
 #include "game.h"
 #include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 #include "cachorro.h"
+GLuint texCabeca;
+
+//eu marrie
+GLuint texturaDog;
+int texturaCarregada = 0;
+int menuImageLargura = 0;
+int menuImageAltura = 0;
+
+void carregarTextura(const char* arquivo, GLuint* idTextura) {
+    int largura, altura, canais;
+    stbi_set_flip_vertically_on_load(true); 
+
+    // Carrega a imagem forçando 4 canais (RGBA) para evitar conflitos
+    unsigned char* dados = stbi_load(arquivo, &largura, &altura, &canais, STBI_rgb_alpha);
+
+    if (dados) {
+        glGenTextures(1, idTextura);
+        glBindTexture(GL_TEXTURE_2D, *idTextura);
+
+        // Configurações de repetição e filtro
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        // Envia os dados para a GPU
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, largura, altura, 0, GL_RGBA, GL_UNSIGNED_BYTE, dados);
+
+        stbi_image_free(dados);
+        printf("Sucesso: %s carregado! (%dx%d)\n", arquivo, largura, altura);
+        texturaCarregada = 1;
+        if (idTextura == &texturaDog) {
+            menuImageLargura = largura;
+            menuImageAltura = altura;
+        }
+    } else {
+        // Se der erro, ele vai imprimir o motivo real aqui
+        printf("Erro STB em '%s': %s\n", arquivo, stbi_failure_reason());
+    }
+}
 
 void drawText(float x, float y, char *text) {
     glRasterPos2f(x,y);
@@ -124,12 +167,69 @@ void drawRanking(){
     }
 }
 
+void drawMenuImage() {
+    if(!texturaCarregada)
+        return;
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texturaDog);
+    glColor3f(1,1,1);
+
+    float maxWidth = COLS * 0.9f;
+    float maxHeight = ROWS * 0.35f;
+    float imgW = maxWidth;
+    float imgH = maxHeight;
+
+    if (menuImageLargura > 0 && menuImageAltura > 0) {
+        float aspect = (float)menuImageLargura / (float)menuImageAltura;
+        if (aspect >= 1.0f) {
+            imgW = maxWidth;
+            imgH = imgW / aspect;
+            if (imgH > maxHeight) {
+                imgH = maxHeight;
+                imgW = imgH * aspect;
+            }
+        } else {
+            imgH = maxHeight;
+            imgW = imgH * aspect;
+            if (imgW > maxWidth) {
+                imgW = maxWidth;
+                imgH = imgW / aspect;
+            }
+        }
+    }
+
+    float centerX = COLS / 2.0f;
+    float centerY = 8.0f;
+    float left = centerX - imgW / 2.0f;
+    float right = centerX + imgW / 2.0f;
+    float bottom = centerY - imgH / 2.0f;
+    float top = centerY + imgH / 2.0f;
+
+    glBegin(GL_QUADS);
+        glTexCoord2f(0,0);
+        glVertex2f(left, bottom);
+
+        glTexCoord2f(1,0);
+        glVertex2f(right, bottom);
+
+        glTexCoord2f(1,1);
+        glVertex2f(right, top);
+
+        glTexCoord2f(0,1);
+        glVertex2f(left, top);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     drawBackground();
 
     if(screen == 0) {
+        drawMenuImage();
         glColor3f(1,1,1);
         drawText(1.2,6,"BARTO.IO");
         drawText(1.5,5,"Clique para jogar");

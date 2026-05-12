@@ -4,7 +4,10 @@
 #include "game.h"
 #include "input.h"
 
-void display();
+extern GLuint texturaDog;
+void carregarTextura(const char* arquivo, GLuint* idTextura);
+
+void display(); 
 
 void timer(int v){
     int delay = 1;
@@ -20,6 +23,8 @@ void init(){
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_TEXTURE_2D); 
+    carregarTextura("menu.png", &texturaDog);
 }
 
 int main(int argc,char** argv){
