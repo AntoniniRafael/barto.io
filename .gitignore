@@ -1,3 +1,5 @@
+.vscode/
+lib/
 jogo.exe
 score.txt
 screenshot.bmp
