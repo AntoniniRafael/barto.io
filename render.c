@@ -135,6 +135,22 @@ void drawParticles(){
     glEnd();
 }
 
+static void desenhaBarraProgresso(float atual, float alvo) {
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glLineWidth(10.0f);
+    glBegin(GL_LINE_STRIP);
+    glVertex2f(1.0f, 9.0f);
+    glVertex2f(4.0f, 9.0f);
+    glEnd();
+    
+    glColor3f(0.2f, 1.0f, 0.2f);
+    glLineWidth(10.0f);
+    glBegin(GL_LINE_STRIP);
+    glVertex2f(1.0f, 9.0f);
+    glVertex2f( 1.0f + ((atual/alvo) * 3.0f), 9.0f);
+    glEnd();
+}
+
 void drawHUD() {
     char txt[50];
 
@@ -145,6 +161,8 @@ void drawHUD() {
 
     sprintf(txt,"Tempo: %.1fs",timeSurvived);
     drawText(3,9.5,txt);
+
+    desenhaBarraProgresso(score, PONTOS_PARA_GANHAR);
 }
 
 void drawRanking(){

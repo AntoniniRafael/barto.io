@@ -6,6 +6,7 @@
 #define MAX_OBS 30
 #define MAX_PARTICLES 50
 #define GAME_OVER_DURATION 500
+#define PONTOS_PARA_GANHAR 50
 
 typedef struct {
     float x, y;
