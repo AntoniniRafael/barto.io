@@ -6,7 +6,12 @@
 #define MAX_OBS 30
 #define MAX_PARTICLES 50
 #define GAME_OVER_DURATION 500
-#define PONTOS_PARA_GANHAR 50
+#define PONTUACAO_VITORIA 50
+
+#define TELA_MENU    0
+#define TELA_JOGO    1
+#define TELA_FIM     2
+#define TELA_VITORIA 3
 
 typedef struct {
     float x, y;
@@ -37,7 +42,7 @@ extern int lastFrameTime;
 
 extern int score;
 extern int gameOver;
-extern int gameOverUntil; // até que timestamp os efetios de game over precisam ser desenhados
+extern int gameOverUntil; 
 extern int paused;
 extern int screen;
 extern int timeStarted;
@@ -58,5 +63,6 @@ void updateGame();
 void spawnObstacle();
 void saveScore();
 void createExplosion(int x, int y);
+void winGame();
 
 #endif

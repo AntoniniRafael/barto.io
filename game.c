@@ -15,12 +15,11 @@ int lastFrameTime = 0;
 float dogPos = 0;
 int score = 0;
 int gameOver = 0;
-int gameOverUntil = 0; // até que timestamp os efetios de game over precisam ser desenhados
+int gameOverUntil = 0;
 int paused = 0;
-int screen = 0;
+int screen = TELA_MENU;
 int timeStarted = 0;
 float timeSurvived = 0;
-int nextInputTime = 0;
 int canMove = 1;
 int moveLeft = KEY_RELEASED;
 int moveRight = KEY_RELEASED;;
@@ -30,7 +29,7 @@ int nextObstaclesTime = 0;
 
 void initGame() {
     lastFrameTime = glutGet(GLUT_ELAPSED_TIME);
-    dogPos = COLS / 2; // inicia no meio
+    dogPos = COLS / 2;
     score = 0;
     gameOver = 0;
     gameOverUntil = 0;
@@ -38,12 +37,11 @@ void initGame() {
     timeStarted = glutGet(GLUT_ELAPSED_TIME);
     timeSurvived = 0;
     
-    nextInputTime = 0;
     canMove = 1;
     moveLeft = moveRight = KEY_RELEASED;
     
     obstacleSpeed = 0.005f;
-    obstacleSpawnInterval = 1000; // começa com 1 obstacúlo sendo criado por segundo
+    obstacleSpawnInterval = 1000;
     nextObstaclesTime = 0;
 
     for(int i=0;i<MAX_OBS;i++)
@@ -55,7 +53,12 @@ void initGame() {
 
 void endGame() {
     saveScore();
-    screen = 2; // tela de fim de jogo / score board
+    screen = TELA_FIM;
+}
+
+void winGame() {
+    saveScore();
+    screen = TELA_VITORIA;
 }
 
 void spawnObstacle() {
@@ -84,13 +87,12 @@ void updateGame() {
     int delta = now - lastFrameTime;
     lastFrameTime = now;
     
-    if (screen != 1) {
-        return; // se não está na tela de jogo
+    if (screen != TELA_JOGO) {
+        return;
     }
 
     if(gameOver) {
         if (now < gameOverUntil) {
-            // desenha partículas do gameover no cachorro
             for(int i=0;i<MAX_PARTICLES;i++){
                 if(particles[i].life > 0){
                     particles[i].x += particles[i].dx;
@@ -102,7 +104,7 @@ void updateGame() {
             endGame();
         }
 
-        return; // não faz mais nada enquanto em gameover
+        return;
     }
 
     if(gameOver || paused) return;
@@ -114,20 +116,12 @@ void updateGame() {
             } else if (moveRight == KEY_PRESSED && dogPos < COLS - 1) {
                 dogPos += 1;
             }
-            canMove = 0; // Trava o movimento até um tempo passar
-            nextInputTime = now + 150; // Delay entre pulos de grade
+            canMove = 0;
         }
     }
 
-    /* // Se o tempo de espera passou, libera o movimento novamente
-    if (now > nextInputTime) {
-        canMove = 1;
-    } */
-
-    // Se o jogador soltou as teclas, reseta o timer para ele poder clicar rápido de novo
     if (moveLeft == KEY_RELEASED && moveRight == KEY_RELEASED) {
         canMove = 1;
-        nextInputTime = 0;
     }
 
     for(int i=0;i<MAX_OBS;i++) {
@@ -147,32 +141,35 @@ void updateGame() {
             if(obs[i].y < 0) {
                 obs[i].active = 0;
                 score++;
+
+                
+                if (score >= PONTUACAO_VITORIA) {
+                    winGame();
+                    return; 
+                }
+
                 if (obstacleSpawnInterval > 0) {
-                    obstacleSpawnInterval *= 0.99; // diminui 1% o intervalo entre cada spawn
+                    obstacleSpawnInterval *= 0.99;
                 }
                 
-                //if (obstacleSpeed <= 0.01f) {
-                    obstacleSpeed *= 1.01f; // aumenta 1% a velocidade a cada score
-                //}
+                obstacleSpeed *= 1.01f;
                 printf("obstacleSpeed: %f\nobstacleSpawnInterval: %d\n", obstacleSpeed, obstacleSpawnInterval);
             }
         }
     }
 
-    // verifica se já deu o intervalo para novo obstaculo
     if(now > nextObstaclesTime) {
         spawnObstacle();
-        nextObstaclesTime = now + obstacleSpawnInterval; // ajusta o próximo
+        nextObstaclesTime = now + obstacleSpawnInterval;
     }
 
-    timeSurvived = (now - timeStarted)/1000.0f; // atualiza a quantos segundos o player está vivo
+    timeSurvived = (now - timeStarted)/1000.0f;
 }
 
 void saveScore() {
-    int scores[6]; // 5 + 1 (o novo score)
+    int scores[6];
     int count = 0;
 
-    // Tentar ler os scores atuais
     FILE *f = fopen("score.txt", "r");
     if(f) {
         while(count < 5 && fscanf(f, "%d", &scores[count]) != EOF) {
@@ -181,11 +178,9 @@ void saveScore() {
         fclose(f);
     }
 
-    // adicionar o score atual ao array
     scores[count] = score;
     count++;
 
-    // Bubble Sort
     for(int i = 0; i < count - 1; i++) {
         for(int j = 0; j < count - i - 1; j++) {
             if(scores[j] < scores[j+1]) {
@@ -196,7 +191,6 @@ void saveScore() {
         }
     }
 
-    // salvar apenas os 5 melhores
     f = fopen("score.txt", "w");
     if(f) {
         int maxToSave = (count < 5) ? count : 5;
