@@ -51,13 +51,24 @@ void drawText(float x, float y, char *text) {
 void drawBackground() {
     glBegin(GL_QUADS);
     glColor3f(0.1, 0.1, 0.3);
-    glVertex2f(0, 0);
+    glVertex2f(0,0);
     glColor3f(0.0, 0.0, 0.0);
-    glVertex2f(COLS, 0);
+    glVertex2f(COLS,0);
     glColor3f(0.0, 0.0, 0.0);
-    glVertex2f(COLS, ROWS);
+    glVertex2f(COLS,ROWS);
     glColor3f(0.1, 0.1, 0.3);
-    glVertex2f(0, ROWS);
+    glVertex2f(0,ROWS);
+    glEnd();
+}
+
+static void drawColumnLines() {
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glLineWidth(1.0f);
+    glBegin(GL_LINES);
+    for(int i = 1; i < COLS; i++) {
+        glVertex2f((float)i, 0.0f);
+        glVertex2f((float)i, (float)ROWS);
+    }
     glEnd();
 }
 
@@ -211,9 +222,9 @@ void drawMenuImage() {
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    drawBackground();
 
     if(screen == TELA_MENU) {
+        drawBackground();           // sem linhas
         drawMenuImage();
         glColor3f(1, 1, 1);
         drawText(1.2, 6, "BARTO.IO");
@@ -223,12 +234,15 @@ void display() {
         drawText(1.3, 2, "S para screenshot");
     }
     else if(screen == TELA_JOGO) {
+        drawBackground();
+        drawColumnLines();          // ✅ só aqui aparecem as linhas
         desenhaCachorro(dogPos+0.5, 0.5f, 2.0f);
         drawObs();
         drawParticles();
         drawHUD();
     }
     else if(screen == TELA_FIM) {
+        drawBackground();           // sem linhas
         glColor3f(1, 1, 1);
         drawText(1, 6, "GAME OVER");
         char txt[50];
@@ -239,6 +253,7 @@ void display() {
         drawText(1.0, 0.5, "Clique para voltar ao menu");
     }
     else if(screen == TELA_VITORIA) {
+        drawBackground();           // sem linhas
         float tempo = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
         float pulse = (sin(tempo * 5.0f) + 1.0f) / 2.0f;
 
@@ -252,7 +267,6 @@ void display() {
         sprintf(txt, "Tempo: %.1fs", timeSurvived);
         drawText(1.3, 6.5, txt);
 
-        // Barra cheia em dourado
         glColor3f(1.0f, 1.0f, 1.0f);
         glLineWidth(10.0f);
         glBegin(GL_LINE_STRIP);

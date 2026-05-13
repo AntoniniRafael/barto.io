@@ -24,7 +24,7 @@ static void desenharOrelhas(float x, float y, float s)
 {
     glColor3f(0.30f, 0.15f, 0.05f);
 
-    // Orelha esquerda
+    
     glBegin(GL_POLYGON);
     glVertex2f(x + s * -0.25f, y + s *  0.20f);
     glVertex2f(x + s * -0.10f, y + s *  0.28f);
@@ -32,7 +32,7 @@ static void desenharOrelhas(float x, float y, float s)
     glVertex2f(x + s * -0.10f, y + s *  0.14f);
     glEnd();
 
-    // Orelha direita
+   
     glBegin(GL_POLYGON);
     glVertex2f(x + s *  0.05f, y + s *  0.20f);
     glVertex2f(x + s *  0.10f, y + s *  0.28f);
@@ -59,7 +59,7 @@ static void desenharOlhos(float x, float y, float s)
     desenharCirculo(x + s * -0.07f, y + s * 0.06f, s * 0.04f);
     desenharCirculo(x + s *  0.07f, y + s * 0.06f, s * 0.04f);
 
-    // Brilho dos olhos
+    
     glColor3f(1.0f, 1.0f, 1.0f);
     desenharCirculo(x + s * -0.05f, y + s * 0.08f, s * 0.012f);
     desenharCirculo(x + s *  0.09f, y + s * 0.08f, s * 0.012f);
@@ -67,15 +67,15 @@ static void desenharOlhos(float x, float y, float s)
 
 static void desenharFocinhoEBoca(float x, float y, float s)
 {
-    // Focinho
+    
     glColor3f(0.55f, 0.32f, 0.12f);
     desenharCirculo(x, y + s * -0.06f, s * 0.08f);
 
-    // Nariz
+    
     glColor3f(0.10f, 0.05f, 0.05f);
     desenharCirculo(x, y + s * -0.03f, s * 0.03f);
 
-    // Língua
+    
     glColor3f(0.90f, 0.30f, 0.45f);
     glBegin(GL_POLYGON);
     glVertex2f(x + s * -0.04f, y + s * -0.10f);
@@ -88,7 +88,7 @@ static void desenharFocinhoEBoca(float x, float y, float s)
 
 static void desenharRabo(float x, float y, float s)
 {
-    // Rabo animado
+    
     float oscilacao = cosf(timeSurvived * 8.0f) * s * 0.12f;
 
     glColor3f(0.55f, 0.30f, 0.08f);
