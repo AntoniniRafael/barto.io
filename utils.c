@@ -12,31 +12,27 @@ void saveScreenshot() {
     const char filename[] = "screenshot.bmp";
     int w = 500, h = 800;
 
-    // 1. Alocar memória para os pixels (RGB)
     unsigned char* pixels = malloc(sizeof(unsigned char) * 3 * w * h);
     
-    // 2. Ler os pixels do Back Buffer
-    // Usamos GL_BGR porque o formato BMP armazena as cores como Blue-Green-Red
     glReadPixels(0, 0, w, h, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
 
-    // 3. Cabeçalhos do arquivo BMP (Total 54 bytes)
     unsigned char fileHeader[14] = {
-        'B','M',            // Assinatura
-        0,0,0,0,            // Tamanho do arquivo (preencheremos depois)
-        0,0,0,0,            // Reservado
-        54,0,0,0            // Offset onde começam os pixels
+        'B','M',            
+        0,0,0,0,            
+        0,0,0,0,            
+        54,0,0,0            
     };
     
     unsigned char infoHeader[40] = {
-        40,0,0,0,           // Tamanho do cabeçalho de info
-        0,0,0,0,            // Largura (preencheremos depois)
-        0,0,0,0,            // Altura (preencheremos depois)
-        1,0,                // Planos
-        24,0,               // Bits por pixel (24 bits = RGB)
-        0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 // Outros campos zerados
+        40,0,0,0,         
+        0,0,0,0,           
+        0,0,0,0,            
+        1,0,                
+        24,0,              
+        0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 
     };
 
-    // Preencher tamanhos no cabeçalho
+    
     int fileSize = 54 + (3 * w * h);
     fileHeader[2] = (unsigned char)(fileSize);
     fileHeader[3] = (unsigned char)(fileSize >> 8);
@@ -53,7 +49,7 @@ void saveScreenshot() {
     infoHeader[10] = (unsigned char)(h >> 16);
     infoHeader[11] = (unsigned char)(h >> 24);
 
-    // 4. Escrever no arquivo
+
     FILE* f = fopen(filename, "wb");
     fwrite(fileHeader, 1, 14, f);
     fwrite(infoHeader, 1, 40, f);
