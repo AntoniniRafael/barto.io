@@ -224,7 +224,7 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     if(screen == TELA_MENU) {
-        drawBackground();           // sem linhas
+        drawBackground();           
         drawMenuImage();
         glColor3f(1, 1, 1);
         drawText(1.2, 6, "BARTO.IO");
@@ -235,14 +235,14 @@ void display() {
     }
     else if(screen == TELA_JOGO) {
         drawBackground();
-        drawColumnLines();          // ✅ só aqui aparecem as linhas
+        drawColumnLines();          
         desenhaCachorro(dogPos+0.5, 0.5f, 2.0f);
         drawObs();
         drawParticles();
         drawHUD();
     }
     else if(screen == TELA_FIM) {
-        drawBackground();           // sem linhas
+        drawBackground();           
         glColor3f(1, 1, 1);
         drawText(1, 6, "GAME OVER");
         char txt[50];
@@ -253,7 +253,7 @@ void display() {
         drawText(1.0, 0.5, "Clique para voltar ao menu");
     }
     else if(screen == TELA_VITORIA) {
-        drawBackground();           // sem linhas
+        drawBackground();           
         float tempo = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
         float pulse = (sin(tempo * 5.0f) + 1.0f) / 2.0f;
 
