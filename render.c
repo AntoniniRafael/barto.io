@@ -3,8 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <SOIL/SOIL.h>
 #include "cachorro.h"
 GLuint texCabeca;
 
@@ -14,31 +13,34 @@ int menuImageLargura = 0;
 int menuImageAltura = 0;
 
 void carregarTextura(const char* arquivo, GLuint* idTextura) {
-    int largura, altura, canais;
-    stbi_set_flip_vertically_on_load(true);
+    int largura, altura;
 
-    unsigned char* dados = stbi_load(arquivo, &largura, &altura, &canais, STBI_rgb_alpha);
+    unsigned char* dados = SOIL_load_image(arquivo, &largura, &altura, NULL, SOIL_LOAD_RGBA);
+    if (!dados) {
+        printf("Erro SOIL em '%s': %s\n", arquivo, SOIL_last_result());
+        return;
+    }
 
-    if (dados) {
-        glGenTextures(1, idTextura);
-        glBindTexture(GL_TEXTURE_2D, *idTextura);
+    GLuint tex = SOIL_create_OGL_texture(dados, largura, altura, 4, 0, SOIL_FLAG_INVERT_Y);
+    if (tex == 0) {
+        printf("Erro SOIL em '%s': %s\n", arquivo, SOIL_last_result());
+        SOIL_free_image_data(dados);
+        return;
+    }
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    *idTextura = tex;
+    glBindTexture(GL_TEXTURE_2D, *idTextura);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, largura, altura, 0, GL_RGBA, GL_UNSIGNED_BYTE, dados);
-
-        stbi_image_free(dados);
-        printf("Sucesso: %s carregado! (%dx%d)\n", arquivo, largura, altura);
-        texturaCarregada = 1;
-        if (idTextura == &texturaDog) {
-            menuImageLargura = largura;
-            menuImageAltura = altura;
-        }
-    } else {
-        printf("Erro STB em '%s': %s\n", arquivo, stbi_failure_reason());
+    SOIL_free_image_data(dados);
+    printf("Sucesso: %s carregado! (%dx%d)\n", arquivo, largura, altura);
+    texturaCarregada = 1;
+    if (idTextura == &texturaDog) {
+        menuImageLargura = largura;
+        menuImageAltura = altura;
     }
 }
 
