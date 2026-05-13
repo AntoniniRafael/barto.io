@@ -5,7 +5,6 @@
 
 void drawText(float x, float y, char *text);
 void drawBackground();
-void drawDog();
 void drawObs();
 void drawParticles();
 void drawHUD();

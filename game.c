@@ -22,7 +22,7 @@ int timeStarted = 0;
 float timeSurvived = 0;
 int canMove = 1;
 int moveLeft = KEY_RELEASED;
-int moveRight = KEY_RELEASED;;
+int moveRight = KEY_RELEASED;
 float obstacleSpeed;
 int obstacleSpawnInterval = 1000;
 int nextObstaclesTime = 0;

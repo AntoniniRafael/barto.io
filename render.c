@@ -72,38 +72,6 @@ static void drawColumnLines() {
     glEnd();
 }
 
-void drawDog() {
-    glColor3f(0.8, 0.5, 0.2);
-    glBegin(GL_QUADS);
-    glVertex2f(dogPos, 0);
-    glVertex2f(dogPos+1, 0);
-    glVertex2f(dogPos+1, 0.5);
-    glVertex2f(dogPos, 0.5);
-    glEnd();
-
-    glColor3f(0.9, 0.6, 0.3);
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(dogPos+0.5, 0.8);
-    for(int i = 0; i <= 20; i++) {
-        float ang = i * 3.14 / 10;
-        glVertex2f(dogPos+0.5 + 0.3*cos(ang), 0.8 + 0.3*sin(ang));
-    }
-    glEnd();
-
-    glColor3f(0.5, 0.3, 0.1);
-    glBegin(GL_TRIANGLES);
-    glVertex2f(dogPos+0.3, 1.0);
-    glVertex2f(dogPos+0.5, 0.8);
-    glVertex2f(dogPos+0.7, 1.0);
-    glEnd();
-
-    glColor3f(0, 0, 0);
-    glPointSize(5);
-    glBegin(GL_POINTS);
-    glVertex2f(dogPos+0.55, 0.85);
-    glEnd();
-}
-
 void drawObs() {
     for(int i = 0; i < MAX_OBS; i++) {
         if(obs[i].active) {

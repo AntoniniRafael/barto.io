@@ -43,7 +43,7 @@ int main(int argc,char** argv){
     glutInitWindowSize(width, height);
     glutInitWindowPosition(posX, posY);
     
-    glutCreateWindow("Dog Dodge Deluxe");
+    glutCreateWindow("Barto.io");
 
     init();
 
